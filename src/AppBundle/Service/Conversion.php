@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Converter\ConvertToCsv;
 use AppBundle\Converter\ConvertToJson;
+use AppBundle\Converter\ConvertToObject;
 use AppBundle\Converter\ConvertToXml;
 use AppBundle\Converter\ConvertToYaml;
 use Monolog\Logger;
@@ -42,6 +43,9 @@ class Conversion
                 break;
             case 'xml':
                 $converter = $this->convertToXml;
+                break;
+            case 'object':
+                $converter = new ConvertToObject();
                 break;
             default:
                 throw new \DomainException('no matching converter');

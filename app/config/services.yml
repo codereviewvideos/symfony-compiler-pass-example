@@ -4,6 +4,12 @@ parameters:
 #    parameter_name: value
 
 services:
+    crv.conversion:
+        class: AppBundle\Service\Conversion
+        arguments:
+            - "@logger"
+            - "@crv.converter.convert_to_xml"
+
     crv.converter.convert_to_xml:
         class: AppBundle\Converter\ConvertToXml
         arguments:

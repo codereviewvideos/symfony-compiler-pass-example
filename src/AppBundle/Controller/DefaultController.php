@@ -24,7 +24,7 @@ class DefaultController extends Controller
 
         $format = $request->query->get('format', 'json');
 
-        $output = $this->get('crv.conversion')->convert($data, $format);
+        $output = $this->get('crv.service.conversion')->convert($data, $format);
 
         // replace this example code with whatever you need
         return $this->render('default/index.html.twig', [

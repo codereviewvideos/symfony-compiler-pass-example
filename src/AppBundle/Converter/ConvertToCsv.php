@@ -4,6 +4,11 @@ namespace AppBundle\Converter;
 
 class ConvertToCsv implements ConverterInterface
 {
+    public function supports(string $format)
+    {
+        return $format === 'csv';
+    }
+
     public function convert(array $data)
     {
         return $this->array_2_csv($data);

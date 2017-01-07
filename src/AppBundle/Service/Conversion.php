@@ -2,55 +2,53 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Converter\ConvertToCsv;
-use AppBundle\Converter\ConvertToJson;
-use AppBundle\Converter\ConvertToObject;
-use AppBundle\Converter\ConvertToXml;
-use AppBundle\Converter\ConvertToYaml;
-use Monolog\Logger;
+use AppBundle\Converter\ConverterInterface;
+use Psr\Log\LoggerInterface;
 
 class Conversion
 {
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
     /**
-     * @var ConvertToXml
+     * @var array
      */
-    private $convertToXml;
+    private $converters;
 
-    public function __construct(
-        Logger $logger,
-        ConvertToXml $convertToXml
-    )
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
-        $this->convertToXml = $convertToXml;
+        $this->converters = [];
+
+        $this->logger->debug('Conversion service constructed...');
     }
 
-    public function convert($data, $format)
+    public function addConverter(ConverterInterface $converter)
     {
-        switch ($format) {
-            case 'json':
-                $converter = new ConvertToJson();
-                break;
-            case 'csv':
-                $converter = new ConvertToCsv();
-                break;
-            case 'yml':
-                $converter = new ConvertToYaml();
-                break;
-            case 'xml':
-                $converter = $this->convertToXml;
-                break;
-            case 'object':
-                $converter = new ConvertToObject();
-                break;
-            default:
-                throw new \DomainException('no matching converter');
+        $this->logger->debug(sprintf(
+            'Adding %s to chain of Converters',
+            get_class($converter)
+        ));
+
+        $this->converters[] = $converter;
+
+        return $this->converters;
+    }
+
+    public function convert(array $data, $format)
+    {
+        $this->logger->debug(sprintf(
+            'Trying to convert from %s',
+            $format
+        ));
+
+        foreach ($this->converters as $converter) {
+            if ($converter->supports($format)) {
+                return $converter->convert($data);
+            }
         }
 
-        return $converter->convert($data);
+        throw new \RuntimeException('No supported Converters found in chain.');
     }
 }

@@ -16,6 +16,11 @@ class ConvertToXml implements ConverterInterface
         $this->serializer = $serializer;
     }
 
+    public function supports(string $format)
+    {
+        return $format === 'xml';
+    }
+
     public function convert(array $data)
     {
         return $this->serializer->encode($data, 'xml');

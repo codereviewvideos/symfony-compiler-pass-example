@@ -4,13 +4,32 @@ parameters:
 #    parameter_name: value
 
 services:
-    crv.conversion:
+    crv.service.conversion:
         class: AppBundle\Service\Conversion
         arguments:
             - "@logger"
-            - "@crv.converter.convert_to_xml"
+
+    # not added convert_to_json in order to see the error
+    # http://127.0.0.1:8000/?format=json
+
+    crv.converter.convert_to_csv:
+        class: AppBundle\Converter\ConvertToCsv
+        tags:
+            - { name: "crv.converter" }
+
+    crv.converter.convert_to_object:
+        class: AppBundle\Converter\ConvertToObject
+        tags:
+            - { name: "crv.converter" }
+
+    crv.converter.convert_to_yaml:
+        class: AppBundle\Converter\ConvertToYaml
+        tags:
+            - { name: "crv.converter" }
 
     crv.converter.convert_to_xml:
         class: AppBundle\Converter\ConvertToXml
         arguments:
             - "@serializer"
+        tags:
+            - { name: "crv.converter" }

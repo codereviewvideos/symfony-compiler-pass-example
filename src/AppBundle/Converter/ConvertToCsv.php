@@ -9,7 +9,7 @@ class ConvertToCsv implements ConverterInterface
         return $this->array_2_csv($data);
     }
 
-    public function array_2_csv($array) {
+    private function array_2_csv($array) {
         $csv = array();
         foreach ($array as $item=>$val) {
             if (is_array($val)) {

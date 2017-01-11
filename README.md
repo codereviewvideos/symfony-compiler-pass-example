@@ -1,5 +1,4 @@
 # Symfony Compiler Pass Example
-===============================
 
 The videos for this course can be found at https://codereviewvideos.com/course/symfony-compiler-pass-example
 
